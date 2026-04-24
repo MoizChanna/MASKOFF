@@ -1,0 +1,619 @@
+/* ── Reset & Root Variables ─────────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --bg:        #090910;
+  --surface:   #13131a;
+  --surface2:  #1c1c27;
+  --red:       #E63946;
+  --green:     #2EFF9A;
+  --manila:    #F5E6C8;
+  --yellow:    #F8E05C;
+  --muted:     #3a3a50;
+  --text:      #d4d4e8;
+  --font-head: 'Syne', sans-serif;
+  --font-mono: 'DM Mono', monospace;
+  --radius:    4px;
+}
+
+html, body {
+  height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 15px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Scanline Overlay ───────────────────────────────────────────────────────── */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.08) 2px,
+    rgba(0, 0, 0, 0.08) 4px
+  );
+}
+
+/* ── Typography ─────────────────────────────────────────────────────────────── */
+h1, h2, h3 {
+  font-family: var(--font-head);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+button {
+  font-family: var(--font-mono);
+  cursor: pointer;
+}
+
+input, select, textarea {
+  font-family: var(--font-mono);
+  background: var(--surface2);
+  border: 1px solid var(--muted);
+  color: var(--text);
+  border-radius: var(--radius);
+  padding: 0.75rem 1rem;
+  width: 100%;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+input:focus, select:focus {
+  border-color: var(--green);
+}
+
+input::placeholder {
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* ── Screen Layout ──────────────────────────────────────────────────────────── */
+.screen {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem 1.25rem;
+  position: relative;
+}
+
+.screen-inner {
+  width: 100%;
+  max-width: 480px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* ── MASKOFF Logo ───────────────────────────────────────────────────────────── */
+.logo {
+  font-family: var(--font-head);
+  font-weight: 800;
+  font-size: clamp(3rem, 15vw, 6rem);
+  color: var(--manila);
+  text-transform: uppercase;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  position: relative;
+  display: inline-block;
+}
+
+.logo.glitch {
+  animation: glitch 4s infinite;
+}
+
+@keyframes glitch {
+  0%, 90%, 100% { transform: none; text-shadow: none; }
+  92% {
+    transform: translate(-2px, 0) skew(-1deg);
+    text-shadow: 2px 0 var(--red), -2px 0 var(--green);
+  }
+  94% {
+    transform: translate(2px, 0) skew(1deg);
+    text-shadow: -2px 0 var(--red), 2px 0 var(--green);
+  }
+  96% { transform: none; text-shadow: 2px 0 var(--red); }
+  98% { transform: translate(-1px, 1px); text-shadow: none; }
+}
+
+/* ── Stamp Button ───────────────────────────────────────────────────────────── */
+.btn {
+  display: block;
+  width: 100%;
+  padding: 0.9rem 1.5rem;
+  font-family: var(--font-head);
+  font-weight: 800;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  border: none;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: transform 0.08s, box-shadow 0.08s;
+  position: relative;
+  user-select: none;
+}
+
+.btn:active {
+  transform: translateY(3px) scale(0.98);
+  box-shadow: none !important;
+}
+
+.btn-primary {
+  background: var(--green);
+  color: #090910;
+  box-shadow: 0 4px 0 #1cb870;
+}
+
+.btn-primary:hover {
+  background: #4fffad;
+}
+
+.btn-danger {
+  background: var(--red);
+  color: #fff;
+  box-shadow: 0 4px 0 #a0222c;
+}
+
+.btn-danger:hover {
+  background: #ff4a55;
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--manila);
+  border: 2px solid var(--muted);
+  box-shadow: none;
+}
+
+.btn-ghost:hover {
+  border-color: var(--manila);
+}
+
+.btn-yellow {
+  background: var(--yellow);
+  color: #090910;
+  box-shadow: 0 4px 0 #c0aa30;
+}
+
+.btn-sm {
+  font-size: 0.8rem;
+  padding: 0.5rem 1rem;
+}
+
+.btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* ── Card / Surface ─────────────────────────────────────────────────────────── */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--muted);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+}
+
+/* ── Section Label ──────────────────────────────────────────────────────────── */
+.label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--muted);
+  font-family: var(--font-mono);
+}
+
+/* ── Redacted Bar ───────────────────────────────────────────────────────────── */
+.redacted {
+  display: inline-block;
+  background: var(--muted);
+  color: transparent;
+  border-radius: 2px;
+  user-select: none;
+}
+
+/* ── Room Code Display ──────────────────────────────────────────────────────── */
+.room-code {
+  font-family: var(--font-head);
+  font-weight: 800;
+  font-size: clamp(2.5rem, 12vw, 5rem);
+  letter-spacing: 0.18em;
+  color: var(--manila);
+  border: 3px solid var(--muted);
+  border-radius: var(--radius);
+  padding: 0.5rem 1.5rem;
+  text-align: center;
+  background: var(--surface);
+  position: relative;
+}
+
+.room-code::before {
+  content: 'FILE NO.';
+  position: absolute;
+  top: -0.6rem;
+  left: 1rem;
+  background: var(--surface);
+  padding: 0 0.4rem;
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  color: var(--muted);
+  font-family: var(--font-mono);
+}
+
+/* ── Stamp Text ─────────────────────────────────────────────────────────────── */
+.stamp {
+  display: inline-block;
+  font-family: var(--font-head);
+  font-weight: 800;
+  font-size: clamp(1.8rem, 8vw, 3rem);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  border: 4px solid currentColor;
+  border-radius: 6px;
+  padding: 0.3rem 1rem;
+  opacity: 0.92;
+  transform: rotate(-4deg);
+}
+
+.stamp-green { color: var(--green); }
+.stamp-red   { color: var(--red); }
+.stamp-yellow { color: var(--yellow); }
+
+/* ── Terminal Spinner ───────────────────────────────────────────────────────── */
+.terminal-loader {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-family: var(--font-mono);
+  color: var(--green);
+  font-size: 0.9rem;
+  letter-spacing: 0.1em;
+}
+
+.terminal-spinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid var(--muted);
+  border-top-color: var(--green);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── Blinking Cursor ────────────────────────────────────────────────────────── */
+.blink {
+  animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
+}
+
+/* ── Dossier Line Entry Animation ───────────────────────────────────────────── */
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(-16px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+.slide-in {
+  animation: slideIn 0.3s ease forwards;
+}
+
+/* ── Stamp Slam Animation ───────────────────────────────────────────────────── */
+@keyframes stampSlam {
+  0%   { transform: rotate(-4deg) scale(2.4); opacity: 0; }
+  60%  { transform: rotate(-4deg) scale(0.95); opacity: 1; }
+  80%  { transform: rotate(-4deg) scale(1.05); }
+  100% { transform: rotate(-4deg) scale(1); opacity: 1; }
+}
+
+.stamp-slam {
+  animation: stampSlam 0.5s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+}
+
+/* ── Card Flip ──────────────────────────────────────────────────────────────── */
+.flip-container {
+  perspective: 1000px;
+  width: 100%;
+}
+
+.flip-card {
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1);
+  width: 100%;
+}
+
+.flip-card.flipped {
+  transform: rotateY(180deg);
+}
+
+.flip-front,
+.flip-back {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.flip-back {
+  position: absolute;
+  inset: 0;
+  transform: rotateY(180deg);
+}
+
+/* ── Vote Tally ─────────────────────────────────────────────────────────────── */
+.tally {
+  display: flex;
+  gap: 3px;
+  flex-wrap: wrap;
+}
+
+.tally-mark {
+  width: 8px;
+  height: 20px;
+  background: var(--red);
+  border-radius: 1px;
+  opacity: 0;
+  animation: tallyIn 0.2s ease forwards;
+}
+
+@keyframes tallyIn {
+  to { opacity: 1; }
+}
+
+/* ── Toggle Switch ──────────────────────────────────────────────────────────── */
+.toggle-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  background: var(--surface2);
+  border-radius: var(--radius);
+  border: 1px solid var(--muted);
+}
+
+.toggle {
+  position: relative;
+  width: 48px;
+  height: 26px;
+  flex-shrink: 0;
+}
+
+.toggle input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle-track {
+  position: absolute;
+  inset: 0;
+  background: var(--muted);
+  border-radius: 13px;
+  transition: background 0.2s;
+  cursor: pointer;
+}
+
+.toggle input:checked + .toggle-track {
+  background: var(--green);
+}
+
+.toggle-track::after {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: white;
+  top: 3px;
+  left: 3px;
+  transition: transform 0.2s;
+}
+
+.toggle input:checked + .toggle-track::after {
+  transform: translateX(22px);
+}
+
+/* ── Number Stepper ─────────────────────────────────────────────────────────── */
+.stepper {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.stepper-btn {
+  width: 36px;
+  height: 36px;
+  border: 2px solid var(--muted);
+  background: transparent;
+  color: var(--text);
+  font-size: 1.2rem;
+  border-radius: var(--radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.15s, transform 0.08s;
+}
+
+.stepper-btn:active {
+  transform: scale(0.9);
+}
+
+.stepper-btn:hover {
+  border-color: var(--green);
+  color: var(--green);
+}
+
+.stepper-value {
+  font-family: var(--font-head);
+  font-weight: 800;
+  font-size: 1.5rem;
+  color: var(--manila);
+  min-width: 2ch;
+  text-align: center;
+}
+
+/* ── Alive / Eliminated Indicator ───────────────────────────────────────────── */
+.dot-alive {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--green);
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.dot-dead {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--muted);
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+/* ── Tagline / Subtitle ─────────────────────────────────────────────────────── */
+.tagline {
+  font-family: var(--font-mono);
+  font-style: italic;
+  color: var(--muted);
+  font-size: 1rem;
+  letter-spacing: 0.05em;
+}
+
+/* ── Error Text ─────────────────────────────────────────────────────────────── */
+.error-text {
+  color: var(--red);
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* ── Divider ────────────────────────────────────────────────────────────────── */
+.divider {
+  height: 1px;
+  background: var(--muted);
+  opacity: 0.4;
+}
+
+/* ── Card Reveal Animation ──────────────────────────────────────────────────── */
+@keyframes cardFlipIn {
+  0%   { opacity: 0; transform: perspective(600px) rotateY(-90deg); }
+  100% { opacity: 1; transform: perspective(600px) rotateY(0deg); }
+}
+
+/* ── Confetti Canvas ────────────────────────────────────────────────────────── */
+#confetti-canvas {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 100;
+}
+
+/* ── Skip Vote Card ─────────────────────────────────────────────────────────── */
+.skip-card {
+  background: #1a1a1a;
+  border: 2px dashed #444;
+  border-radius: var(--radius);
+  padding: 0.85rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  cursor: pointer;
+  color: #888;
+  transition: border-color 0.15s, color 0.15s, opacity 0.15s;
+}
+
+.skip-card:hover:not(.locked-out) {
+  border-color: #888;
+}
+
+.skip-card.voted {
+  border-color: var(--yellow);
+  color: var(--yellow);
+}
+
+.skip-card.locked-out {
+  opacity: 0.35;
+  cursor: default;
+  pointer-events: none;
+}
+
+.skip-icon {
+  font-size: 1.6rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.skip-title {
+  font-family: var(--font-head);
+  font-weight: 800;
+  font-size: 0.9rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.skip-subtitle {
+  font-size: 0.7rem;
+  opacity: 0.75;
+  margin-top: 0.1rem;
+}
+
+.skip-tally {
+  font-family: var(--font-head);
+  font-weight: 800;
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+}
+
+/* ── Vote Locked Label ──────────────────────────────────────────────────────── */
+.vote-locked-label {
+  font-size: 0.55rem;
+  font-family: var(--font-mono);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--yellow);
+}
+
+/* ── Skip Stamp (gray + dashed, distinct from red elimination stamp) ─────────── */
+.stamp-skip {
+  color: #888888;
+  border-style: dashed;
+}
+
+/* ── Skip Result Card ───────────────────────────────────────────────────────── */
+.skip-result {
+  animation: fadeIn 0.4s ease forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
