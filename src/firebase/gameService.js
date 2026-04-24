@@ -29,18 +29,25 @@ export async function createRoom(hostName, settings) {
     isHost: true,
   }
 
-  await setDoc(doc(db, 'rooms', roomCode), {
-    createdAt: serverTimestamp(),
-    settings,
-    status: 'lobby',
-    round: 1,
-    currentRevealIndex: 0,
-    currentTurnIndex: 0,
-    assetWord,
-    ghostWord,
-    winner: null,
-    players: [hostPlayer],
-  })
+  const timeout = new Promise((_, reject) =>
+    setTimeout(() => reject(new Error('Firebase connection timed out — check environment variables')), 10000)
+  )
+
+  await Promise.race([
+    setDoc(doc(db, 'rooms', roomCode), {
+      createdAt: serverTimestamp(),
+      settings,
+      status: 'lobby',
+      round: 1,
+      currentRevealIndex: 0,
+      currentTurnIndex: 0,
+      assetWord,
+      ghostWord,
+      winner: null,
+      players: [hostPlayer],
+    }),
+    timeout,
+  ])
 
   sessionStorage.setItem(`maskoff_${roomCode}`, hostPlayer.id)
   return { roomCode, playerId: hostPlayer.id }
